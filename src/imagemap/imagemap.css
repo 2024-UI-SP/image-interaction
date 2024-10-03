@@ -1,0 +1,20 @@
+body {
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* #imagemap {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+  } */
+
+  .leaflet-container {
+    height: 650px;
+    width: 600px;
+    max-width: 100%;
+    max-height: 100%;
+    background-color: white;
+    border: 1px solid black;
+}

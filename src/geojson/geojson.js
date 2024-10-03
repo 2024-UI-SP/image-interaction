@@ -1,0 +1,110 @@
+import L from 'leaflet';
+import './geojson.css';
+
+// Golbal variables
+// I should probably make a config file. 
+const path = '/'; // need
+const geojsons = ['L1'];  // need
+
+let geoJsonLayer = {}; // I think need to be global
+
+export default async function loadGeoJsons(map) {
+    // This functions takes time. So need to use await.
+    const combinedJson = await combineGeoJsons(geojsons);
+    geoJsonLayer =  loadGeoJson(map, combinedJson);
+}
+
+/**
+ * Combine multiple geojson files into one. 
+ * fetches the geojson files and combines them.
+ * @param {Array} geojsons 
+ * @returns {Object} combinedJson 
+ */
+async function combineGeoJsons(geojsons) {
+    let combinedJson = {};
+    // ToDO: should parallelize this. Use Promise.all. Maybe leave to the team.
+    // A rule "Don't optimize until it is obviously slow".
+    for (let i = 0; i < geojsons.length; i++) {
+        // Fetch and read the response
+        const geojson = geojsons[i];
+        const response = await fetch(path + geojson + '.geojson');
+        const data = await response.json();
+        if (i === 0) { // clone the first geojson file
+            // This may take a long time. Consider using:
+            // https://www.npmjs.com/package/fast-json-stringify
+            // https://www.npmjs.com/package/fast-json-parse
+            // or some other efficent cloning library.
+            combinedJson = JSON.parse(JSON.stringify(data));
+        } else {  // for the rest copy the features
+            // need to test
+            combinedJson.features.push(data.features[0]);
+        }
+    }
+    return combinedJson;
+}
+
+function loadGeoJson(map, geojson) {
+    geoJsonLayer = L.geoJSON(geojson, {
+        style,
+        onEachFeature,  
+    }).addTo(map);
+    return geoJsonLayer;
+}
+
+/**
+ * Functions for setting up interactions with the geojson layer,
+ * i.e. making onEachFeature and style functions.
+ */
+
+function style(feature) {
+    return {
+        // border attributes
+        weight: 2,
+        opacity: 0,
+        color: 'red',
+
+        // fill attributes
+        fillOpacity: 0,
+        fillColor: 'red',  // seems that this is needed to make the highlight work
+    };
+}
+
+function resetHighlight(e) {
+    const layer = e.target;  // We cannot use "e.target" for the layer. 
+    geoJsonLayer.resetStyle(e.target);  // We need to use geoJsonLayer because "e" does not have a "target" for "mouseout".
+    // info.update();
+}
+
+function highlightFeature(e) {
+    const layer = e.target;
+
+    layer.setStyle({
+        weight: 5,
+        opacity: 1,
+    });
+
+    layer.bringToFront();
+    // info.update(layer.feature.properties);
+}
+
+function clickedFeature(e) {
+    const layer = e.target;
+    const name = layer.feature.properties.name;
+    const description = layer.feature.properties.description;
+
+    // const latlng = layer.getBounds().getCenter();
+    // marker.setLatLng(latlng);
+    // marker.bindPopup(name).openPopup();
+}
+
+function onEachFeature(feature, layer) {
+    layer.bindTooltip(feature.properties.name, {sticky: true});
+    layer.on({
+        mouseover: highlightFeature,
+        mouseout: resetHighlight,
+        click: clickedFeature,
+    });
+}
+
+
+
