@@ -1,4 +1,10 @@
 #info {
+    background-color: white;
+    border: 1px solid black;
+    margin-right: 1rem;
+    padding: 10px;
+
+    /* Fix height */
     height: 650px;
 
     /* Fix width */
@@ -6,8 +12,4 @@
     width: 340px;
     max-width: 340px;
 
-    background-color: white;
-    border: 1px solid black;
-    margin-right: 1rem;
-    padding: 10px;
 }

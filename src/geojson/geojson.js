@@ -5,7 +5,7 @@ import { updateInfo } from '../info/info';
 // Golbal variables
 // I should probably make a config file. 
 const path = '/'; // need
-const geojsons = ['L1'];  // need
+const geojsons = ['L1','L4'];  // need
 
 let geoJsonLayer = {}; // I think need to be global
 
@@ -41,9 +41,12 @@ async function combineGeoJsons(geojsons) {
             // https://www.npmjs.com/package/fast-json-parse
             // or some other efficent cloning library.
             combinedJson = JSON.parse(JSON.stringify(data));
+            // console.log('in i===0 combinedJson', combinedJson);
         } else {  // for the rest copy the features
             // need to test
+    
             combinedJson.features.push(data.features[0]);
+            // console.log('in i > 0 combinedJson', combinedJson);
         }
     }
     return combinedJson;
@@ -90,13 +93,12 @@ function highlightFeature(e) {
     });
 
     layer.bringToFront();
-    // info.update(layer.feature.properties);
 }
 
 function clickedFeature(e) {
-    const layer = e.target;
-    const title = layer.feature.properties.name;
-    const description = layer.feature.properties.description;
+    const properties = e.target.feature.properties;
+    const title = properties.name;
+    const description = properties.description;
     const content = {title, description};
     L.DomEvent.stopPropagation(e);  // Prevent the map from being clicked
     updateInfo(content);
