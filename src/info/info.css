@@ -1,0 +1,13 @@
+#info {
+    height: 650px;
+
+    /* Fix width */
+    /* https://stackoverflow.com/questions/14526071/how-to-make-a-div-have-a-fixed-size */
+    width: 340px;
+    max-width: 340px;
+
+    background-color: white;
+    border: 1px solid black;
+    margin-right: 1rem;
+    padding: 10px;
+}

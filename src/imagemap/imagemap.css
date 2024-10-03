@@ -1,14 +1,11 @@
-body {
+/* body {
     margin: 0;
     padding: 0;
-  }
-  
-  /* #imagemap {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      width: 100%;
   } */
+  
+  #imagemap {
+    padding: 10px;
+  }
 
   .leaflet-container {
     height: 650px;

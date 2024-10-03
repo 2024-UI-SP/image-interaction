@@ -1,5 +1,6 @@
-import L from 'leaflet';
+import L, { map } from 'leaflet';
 import './geojson.css';
+import { updateInfo } from '../info/info';
 
 // Golbal variables
 // I should probably make a config file. 
@@ -12,6 +13,11 @@ export default async function loadGeoJsons(map) {
     // This functions takes time. So need to use await.
     const combinedJson = await combineGeoJsons(geojsons);
     geoJsonLayer =  loadGeoJson(map, combinedJson);
+
+    // Add to detect when the map is clicked.
+    map.on('click', function(e) {
+        updateInfo();
+    });
 }
 
 /**
@@ -89,13 +95,13 @@ function highlightFeature(e) {
 
 function clickedFeature(e) {
     const layer = e.target;
-    const name = layer.feature.properties.name;
+    const title = layer.feature.properties.name;
     const description = layer.feature.properties.description;
-
-    // const latlng = layer.getBounds().getCenter();
-    // marker.setLatLng(latlng);
-    // marker.bindPopup(name).openPopup();
+    const content = {title, description};
+    L.DomEvent.stopPropagation(e);  // Prevent the map from being clicked
+    updateInfo(content);
 }
+
 
 function onEachFeature(feature, layer) {
     layer.bindTooltip(feature.properties.name, {sticky: true});
