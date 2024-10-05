@@ -23,7 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 
-# RLP adds, maybe need to add back
-*.png
-*.geojson
+# RLP adds, maybe need to add back. RLP commented out. 
+# *.png
+# *.geojson
 
