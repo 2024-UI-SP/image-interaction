@@ -39,14 +39,10 @@ async function combineGeoJsons(geojsons) {
             // This may take a long time. Consider using:
             // https://www.npmjs.com/package/fast-json-stringify
             // https://www.npmjs.com/package/fast-json-parse
-            // or some other efficent cloning library.
+            // or some other efficient cloning library.
             combinedJson = JSON.parse(JSON.stringify(data));
-            // console.log('in i===0 combinedJson', combinedJson);
         } else {  // for the rest copy the features
-            // need to test
-    
             combinedJson.features.push(data.features[0]);
-            // console.log('in i > 0 combinedJson', combinedJson);
         }
     }
     return combinedJson;
@@ -100,7 +96,7 @@ function clickedFeature(e) {
     const title = properties.name;
     const description = properties.description;
     const content = {title, description};
-    L.DomEvent.stopPropagation(e);  // Prevent the map from being clicked
+    L.DomEvent.stopPropagation(e);  // Prevent the map from getting the event.
     updateInfo(content);
 }
 
